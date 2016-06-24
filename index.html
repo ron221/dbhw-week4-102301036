@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta lang="zh-Hant-TW">
+  <meta charset="utf-8">
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.6.1/lodash.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="dbhw-week4-102301036/main.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Libraries in Taipei</title>
+</head>
+
+<body>
+  <div class="jumbotron">
+    <div class="container">
+      <h1>台北市圖書館</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="content" class="row"></div>
+  </div>
+</body>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    getData(function(err, data) {
+      if(err) {
+        console.log(err);
+      }
+      else {
+        var libraryList = data.result.results;
+        var HTMLlibraryList = libraryList.map(function(library) {
+
+          var HTMLString = "<div class='col-md-4' <h2>" + library.o_tlc_agency_name + "</h2><br><img class='img-thumbnail' src='" + library.o_tlc_agency_img_front + "'><p><ul class='list-group'>";
+          var items = "";
+          for(var key in library) {
+            if(key === "o_tlc_agency_opentime" || key === "o_tlc_agency_address" || key === "o_tlc_agency_phone" || key == "o_tlc_agency_link") {
+              var list = {"o_tlc_agency_opentime" : "opentime", "o_tlc_agency_phone" : "phone", "o_tlc_agency_address" : "address", "o_tlc_agency_link" : "website"};
+              items = items + "<li class='list-group-item'>" + list[key] + ":" + library[key] +"</li>";
+            }
+          }
+          var HTMLString = HTMLString + items + "</ul></p><div>";
+          return HTMLString;
+        });
+
+        HTMLlibraryList.forEach(function(html) {
+          $(html).appendTo("#content");
+        });
+      }
+    });
+  });
+</script>
+</html>
